@@ -18,7 +18,7 @@ const icon = new Icon({
 })
  return (
     <>
-    <div className='w-full h-full z-0 relative'>
+    <div className='w-full h-full z-0 relative' style={{marginTop: "13px", height: "-webkit-fill-available"}}>
   
   
 

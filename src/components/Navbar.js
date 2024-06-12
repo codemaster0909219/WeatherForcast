@@ -8,6 +8,9 @@ import { fetchForcast } from '../store/Slices/forecastSlice';
 import { getLocationDetail } from '../store/Slices/locationSlice';
 import {locateAreaOnMap} from "../store/Slices/mapSlice";
 import { geoDbPlaceName } from '../store/Slices/placeNameSlice';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 
 const Navbar = () => {
   const [isSearchOn,setIsSearchOn] = useState(false);
@@ -15,6 +18,8 @@ const Navbar = () => {
   const root = document.documentElement.classList
   const {data:locationsList} = useSelector(state => state.location)
   const {locationDetail:location} = useSelector((state)=> state.location)
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
 
   const dispatch = useDispatch();
   
@@ -27,25 +32,43 @@ const Navbar = () => {
   
 
   
-  function specificLocation(area){
-    const lat = area.latitude;
-    const lon = area.longitude;
-    const country = area.country;
-    const name = area.name;
+  function specificLocation(){
+    console.log('Latitude:', latitude);
+    console.log('Longitude:', longitude);
+    const lat = latitude;
+    const lon = longitude;
     dispatch(fetchWeather({lat,lon}))
     dispatch(fetchForcast({lat,lon}))
     dispatch(locateAreaOnMap({lat:lat,lon:lon}))
-    dispatch(geoDbPlaceName({name:name,country:country}))
+    // dispatch(geoDbPlaceName({name:name,country:country}))
     
     
     
     const allAreaName = location.map(elem => elem.name)
     
-    if(allAreaName.includes(name)){ 
-    }
-    else{
-      dispatch(getLocationDetail({name:name,country:country,latitude:lat,longitude:lon}))
-    }
+    // if(allAreaName.includes(name)){ 
+    // }
+    // else{
+      dispatch(getLocationDetail({latitude:lat,longitude:lon}))
+    // }
+    // const lat = area.latitude;
+    // const lon = area.longitude;
+    // const country = area.country;
+    // const name = area.name;
+    // dispatch(fetchWeather({lat,lon}))
+    // dispatch(fetchForcast({lat,lon}))
+    // dispatch(locateAreaOnMap({lat:lat,lon:lon}))
+    // dispatch(geoDbPlaceName({name:name,country:country}))
+    
+    
+    
+    // const allAreaName = location.map(elem => elem.name)
+    
+    // if(allAreaName.includes(name)){ 
+    // }
+    // else{
+    //   dispatch(getLocationDetail({name:name,country:country,latitude:lat,longitude:lon}))
+    // }
   }
 
   const debounce = (func) => {
@@ -80,7 +103,7 @@ const Navbar = () => {
 
         <p className='text-xs  text-blue-700 hidden
                       font-ubuntu font-bold md:block md:text-lg'>
-                      WeatherSnap
+                      WeatherForecast
         </p>
         <p className=' text-blue-700 md:hidden
                       font-ubuntu font-bold md:text-lg'>
@@ -89,8 +112,11 @@ const Navbar = () => {
 
       </div>
 
-      
-      <div className='w-4/6 flex justify-start relative items-center bg-slate-100 dark:bg-slate-800 rounded-full' onClick={()=>setIsSearchOn(!isSearchOn)}>
+      <TextField id="standard-basic" label="Latitude" variant="standard" style={{marginBottom: "11px"}} value={latitude} onChange={(e) => setLatitude(e.target.value)} />
+      <TextField id="standard-basic" label="Longitude" variant="standard" style={{marginBottom: "11px"}} value={longitude} onChange={(e) => setLongitude(e.target.value)} />
+      <Button variant="contained" color="success" onClick={specificLocation}><TravelExploreIcon />&nbsp;Forecast</Button>
+
+      {/* <div className='w-4/6 flex justify-start relative items-center bg-slate-100 dark:bg-slate-800 rounded-full' onClick={()=>setIsSearchOn(!isSearchOn)}>
         <div className='h-full w-full flex items-center  justify-between px-2'>
         <div className=' w-[8%] flex justify-center items-center' onClick={(e)=>{e.stopPropagation();setIsSearchOn(!isSearchOn)}} >
         <div>
@@ -158,7 +184,7 @@ const Navbar = () => {
 
       
         </div>
-      </div>
+      </div> */}
 
       <div className=" w-1/6 md:w-1/12 
                      flex justify-center items-center">
@@ -167,11 +193,11 @@ const Navbar = () => {
                          rounded-full '
                >
           
-<label className="relative inline-flex items-center cursor-pointer">
-  <input type="checkbox" value="" className="sr-only peer" />
-  <div onClick={()=>{setToggleDarkMode(!toggleDarkMode)}} className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-</label>
-</div>
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" value="" className="sr-only peer" />
+          <div onClick={()=>{setToggleDarkMode(!toggleDarkMode)}} className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+        </label>
+        </div>
       </div>
     </nav>
   </>
